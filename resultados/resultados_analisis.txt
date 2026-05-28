@@ -1,0 +1,30 @@
+======================================================================
+ANALISIS DE TEMPERATURA GLOBAL - RESULTADOS FINALES
+======================================================================
+
+Fecha del analisis: 2026-05-28 19:58:53
+Fuente de datos: GCAG
+Periodo analizado: 1850 - 2026
+Cantidad de años registrados: 323
+
+======================================================================
+INDICADORES DE TEMPERATURA
+======================================================================
+
+ANOMALIA PROMEDIO:
+   • Valor: 0.007627°C
+   • Interpretacion: La temperatura global ha sido SUPERIOR a la linea base
+
+ANOMALIA MAXIMA (Año mas calido):
+   • Año: 2024
+   • Valor: 1.285000°C
+
+ANOMALIA MINIMA (Año mas frio):
+   • Año: 1904
+   • Valor: -0.597100°C
+
+TENDENCIAS:
+   • Cambio total del periodo: +1.458800°C
+   • Calentamiento por decada: +0.082886°C/decada
+   • Conclusion: El planeta se esta CALENTANDO a razon de 0.0829°C por decada
+
