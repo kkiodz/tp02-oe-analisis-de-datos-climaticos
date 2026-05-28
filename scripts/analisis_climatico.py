@@ -10,7 +10,7 @@ RESULTADOS_DIR = os.path.join(BASE_DIR, 'resultados')
 os.makedirs(RESULTADOS_DIR, exist_ok=True)
 
 print("\n" + "="*60)
-print("ANALISIS DE TEMPERATURA GLOBAL (CSV - SIN LIBRERIAS)")
+print("ANALISIS DE TEMPERATURA GLOBAL (CSV")
 print("="*60 + "\n")
 
 # verificar que el archivo existe
@@ -295,7 +295,7 @@ with open(output_resultados, 'w', encoding='utf-8') as f:
 
 print(f"Resultados guardados en: {output_resultados}")
 
-# paso 7: guardar top 10 años mas calidos y mas frios (sin librerias)
+# paso 7: guardar top 10 años mas calidos y mas frios
 output_top = os.path.join(RESULTADOS_DIR, 'top_anios_temperatura.txt')
 
 # copiar listas para ordenar
