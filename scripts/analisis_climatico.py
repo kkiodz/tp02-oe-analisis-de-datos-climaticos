@@ -1,7 +1,15 @@
 import os
 from datetime import datetime
 
-# configuracion de rutas
+try:
+    import matplotlib.pyplot as plt
+    TIENE_PLT = True
+except ImportError:
+    TIENE_PLT = False
+    print("Nota: matplotlib no disponible, se usará gráfico ASCII")
+
+# Configuracion de rutas
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(SCRIPT_DIR)
 DATOS_PATH = os.path.join(BASE_DIR, 'datos', 'temperaturasanuales.csv')
@@ -13,14 +21,16 @@ print("\n" + "="*60)
 print("ANALISIS DE TEMPERATURA GLOBAL (CSV")
 print("="*60 + "\n")
 
-# verificar que el archivo existe
+# Verificar que el archivo existe
+
 if not os.path.exists(DATOS_PATH):
     print(f"ERROR: No se encuentra el archivo: {DATOS_PATH}")
     print(f"Nota: Asegurate de tener el archivo 'temperaturasanuales.csv' en la carpeta /datos")
     print(f"Nota: El archivo debe tener el formato: Source,Year,Mean")
     exit()
 
-# paso 1: cargar datos del csv manualmente
+# Paso 1: cargar datos del csv manualmente
+
 print("Cargando archivo CSV...")
 datos = []
 fuente = ""
@@ -37,7 +47,7 @@ try:
     encabezado = lineas[0].strip().split(',')
     print(f"Encabezado encontrado: {encabezado}")
     
-    # identificar indices de columnas
+
     idx_source = -1
     idx_year = -1
     idx_mean = -1
@@ -50,8 +60,7 @@ try:
             idx_year = i
         elif 'mean' in col_clean:
             idx_mean = i
-    
-    # si no encuentra los nombres exactos, asume orden: Source, Year, Mean
+
     if idx_source == -1:
         idx_source = 0
     if idx_year == -1:
@@ -59,7 +68,7 @@ try:
     if idx_mean == -1:
         idx_mean = 2
     
-    # procesar lineas de datos (desde la linea 1 hasta el final)
+    # Procesar lineas de datos (desde la linea 1 hasta el final)
     for linea in lineas[1:]:
         linea = linea.strip()
         if not linea:
@@ -97,7 +106,7 @@ if not datos:
     print("ERROR: No se pudieron cargar los datos. Verifica el archivo.")
     exit()
 
-# paso 2: calcular indicadores climaticos
+# Paso 2: calcular indicadores climaticos
 print("\n" + "="*50)
 print("CALCULO DE INDICADORES CLIMATICOS")
 print("="*50)
@@ -109,7 +118,6 @@ anomalia_min = datos[0]['anomalia']
 año_max = datos[0]['año']
 año_min = datos[0]['año']
 
-# recorrer todos los datos
 for registro in datos:
     anomalia = registro['anomalia']
     año = registro['año']
@@ -124,23 +132,23 @@ for registro in datos:
         anomalia_min = anomalia
         año_min = año
 
-# calcular promedio
+# ---------------- Promedio +  Tendencias ----------------
 cantidad = len(datos)
 anomalia_promedio = suma_anomalias / cantidad
 
-# calcular tendencia (primero vs ultimo)
 primera_anomalia = datos[0]['anomalia']
 ultima_anomalia = datos[-1]['anomalia']
 tendencia_total = ultima_anomalia - primera_anomalia
+# ----------------------------------------------------------------
 
-# calentamiento por decada
+# Calentamiento por decada
 años_totales = datos[-1]['año'] - datos[0]['año']
 if años_totales > 0:
     calentamiento_por_decada = (tendencia_total / años_totales) * 10
 else:
     calentamiento_por_decada = 0
 
-# paso 3: calcular media movil de 5 años
+# Paso 3: calcular media movil de 5 años
 ventana = 5
 media_movil_5 = []
 for i in range(len(datos)):
@@ -153,7 +161,7 @@ for i in range(len(datos)):
         media = suma / ventana
         media_movil_5.append((datos[i]['año'], media))
 
-# mostrar resultados en pantalla
+# Muestro resultados en pantalla
 print(f"\nRESULTADOS (Anomalias de temperatura vs linea base):")
 print(f"   • Anomalia promedio: {anomalia_promedio:.4f}°C")
 print(f"   • Anomalia maxima: {anomalia_max:.4f}°C (año {año_max})")
@@ -161,7 +169,7 @@ print(f"   • Anomalia minima: {anomalia_min:.4f}°C (año {año_min})")
 print(f"   • Tendencia general: {tendencia_total:+.4f}°C")
 print(f"   • Calentamiento por decada: {calentamiento_por_decada:+.4f}°C/decada")
 
-# almacenar resultados en un diccionario (para usarlos despues)
+# Almaceno resultados en un diccionario
 resultados = {
     'fuente_datos': datos[0]['fuente'] if datos else "Desconocida",
     'periodo_inicio': datos[0]['año'],
@@ -178,7 +186,7 @@ resultados = {
     'fecha_analisis': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
-# paso 4: generar grafico ascii en consola
+# Paso 4: generar grafico ascii en consola
 print("\n" + "="*50)
 print("GRAFICO DE EVOLUCION (Vista simplificada)")
 print("="*50)
@@ -221,33 +229,33 @@ for reg in muestra:
 
 print("-"*80)
 
-# paso 5: guardar grafico en archivo de texto
-output_grafico = os.path.join(RESULTADOS_DIR, 'grafico_evolucion.txt')
-with open(output_grafico, 'w', encoding='utf-8') as f:
-    f.write("="*70 + "\n")
-    f.write("GRAFICO DE EVOLUCION DE TEMPERATURA GLOBAL (formato texto)\n")
-    f.write("="*70 + "\n\n")
+# SE COMENTA GRAFICO EN ASCII YA QUE TENGO EL MATPLOTLIB DISPONIBLE, PERO SE DEJA EL CODIGO COMO REFERENCIA PARA FUTURAS VERSIONES SIN DEPENDENCIAS EXTERNAS
+# output_grafico = os.path.join(RESULTADOS_DIR, 'grafico_evolucion.txt')
+# with open(output_grafico, 'w', encoding='utf-8') as f:
+#     f.write("="*70 + "\n")
+#     f.write("GRAFICO DE EVOLUCION DE TEMPERATURA GLOBAL (formato texto)\n")
+#     f.write("="*70 + "\n\n")
     
-    f.write(f"Escala: {min_anomalia:.2f}°C a {max_anomalia:.2f}°C\n")
-    f.write(f"Linea 0°C marcada con '|'\n")
-    f.write("-"*80 + "\n")
+#     f.write(f"Escala: {min_anomalia:.2f}°C a {max_anomalia:.2f}°C\n")
+#     f.write(f"Linea 0°C marcada con '|'\n")
+#     f.write("-"*80 + "\n")
     
-    for reg in datos:
-        año = reg['año']
-        anomalia = reg['anomalia']
+#     for reg in datos:
+#         año = reg['año']
+#         anomalia = reg['anomalia']
         
-        pos = int((anomalia - min_anomalia) / rango * escala)
+#         pos = int((anomalia - min_anomalia) / rango * escala)
         
-        if pos >= linea_cero:
-            barra = " " * linea_cero + "█" * (pos - linea_cero) + "|"
-        else:
-            barra = "▒" * (linea_cero - pos) + "|" + " " * (escala - linea_cero)
+#         if pos >= linea_cero:
+#             barra = " " * linea_cero + "█" * (pos - linea_cero) + "|"
+#         else:
+#             barra = "▒" * (linea_cero - pos) + "|" + " " * (escala - linea_cero)
         
-        f.write(f"{año:4d} | {barra} {anomalia:6.3f}°C\n")
+#         f.write(f"{año:4d} | {barra} {anomalia:6.3f}°C\n")
     
-    f.write("-"*80 + "\n")
+#     f.write("-"*80 + "\n")
 
-print(f"Grafico guardado en: {output_grafico}")
+# print(f"Grafico guardado en: {output_grafico}")
 
 # paso 6: guardar resultados numericos en archivo de texto
 output_resultados = os.path.join(RESULTADOS_DIR, 'resultados_analisis.txt')
@@ -350,6 +358,12 @@ with open(output_csv, 'w', encoding='utf-8') as f:
         f.write(f"{año},{anomalia:.4f},{media_movil}\n")
 
 print(f"Datos procesados guardados en: {output_csv}")
+
+if TIENE_PLT and len(datos) > 10:
+    plt.figure(figsize=(10,5))
+    plt.plot([d['año'] for d in datos], [d['anomalia'] for d in datos])
+    plt.savefig(os.path.join(RESULTADOS_DIR, 'grafico.png'))
+    print("Gráfico PNG generado adicionalmente")
 
 # finalizar
 print("\n" + "="*60)

@@ -2,7 +2,7 @@
 ANALISIS DE TEMPERATURA GLOBAL - RESULTADOS FINALES
 ======================================================================
 
-Fecha del analisis: 2026-05-28 19:58:53
+Fecha del analisis: 2026-05-29 16:33:39
 Fuente de datos: GCAG
 Periodo analizado: 1850 - 2026
 Cantidad de años registrados: 323
