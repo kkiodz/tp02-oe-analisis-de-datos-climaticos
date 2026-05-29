@@ -1,18 +1,19 @@
-Trabajo Práctico: Gestión Colaborativa, Control de Versiones y Organización Empresarial (Git, GitHub y Jira)
+# Trabajo Práctico: Gestión Colaborativa, Control de Versiones y Organización Empresarial (Git, GitHub y Jira)
 
-Equipo:
-- Hugo (Lider)
-- Paco (Desarrollador)
-- Luis (QA)
+## Equipo:
+### - Hugo (Lider)
+### - Paco (Desarrollador)
+### - Luis (QA)
 
-Escenario elegido: A - Analisis de Datos Climaticos
+
+## Escenario elegido: A - Analisis de Datos Climaticos
 
 Este proyecto procesa un archivo CSV con datos historicos de temperatura global.
 El archivo contiene registros anuales de anomalias termicas desde 1850 hasta la actualidad.
 El script lee esos datos, calcula indicadores importantes y guarda los resultados
 en la carpeta resultados.
 
-Como funciona el codigo:
+### Como funciona el codigo:
 1. Carga el archivo temperaturasanuales.csv que tiene que estar en la carpeta datos
 2. Lee linea por linea y guarda los valores de año y anomalia
 3. Calcula el promedio de todas las anomalias
@@ -21,7 +22,7 @@ Como funciona el codigo:
 6. Calcula cuanto aumento la temperatura por decada
 7. Hace una media movil de 5 años para suavizar la curva
 
-Los resultados que genera:
+### Resultados que genera:
 - resultados_analisis.txt: contiene todos los indicadores calculados
 - top_anios_temperatura.txt: lista los 10 años mas calidos y los 10 mas frios
 - grafico_evolucion.txt: un grafico de texto que muestra la tendencia
@@ -30,30 +31,30 @@ Los resultados que genera:
 Ejecución programa:
 python scripts/analisis_climatico.py
 
-El programa automaticamente:
+#### El programa automaticamente:
 - busca el archivo en datos/temperaturasanuales.csv
 - crea la carpeta resultados si no existe
 - escribe todos los archivos de salida ahi
 
-Que significa cada indicador
+### Que significa cada indicador
 
-Anomalia promedio: es el valor medio de todas las anomalias registradas.
+**Anomalia promedio**: es el valor medio de todas las anomalias registradas.
 Si es positivo significa que en promedio el planeta estuvo mas caliente
 que la linea base establecida.
 
-Anomalia maxima: el año con la temperatura mas alta registrada.
+**Anomalia maxima**: el año con la temperatura mas alta registrada.
 
-Anomalia minima: el año con la temperatura mas baja registrada.
+**Anomalia minima**: el año con la temperatura mas baja registrada.
 
-Tendencia por decada: cuanto cambio la temperatura cada 10 años. Un valor
+**Tendencia por decada**: cuanto cambio la temperatura cada 10 años. Un valor
 positivo indica calentamiento, negativo indica enfriamiento.
 
-Media movil 5 años: promedio de los ultimos 5 años. Sirve para ver la
+**Media movil 5 años**: promedio de los ultimos 5 años. Sirve para ver la
 tendencia sin que los años particulares generen mucho ruido.
 
-Formato del archivo de entrada
+### Formato del archivo de entrada
 
-El archivo CSV tiene que tener este formato exacto:
+**El archivo CSV tiene que tener este formato exacto:**
 
 Source,Year,Mean
 GCAG,1850,-0.4265
@@ -66,16 +67,12 @@ El script esta preparado para encontrar las columnas aunque los nombres
 esten escritos en mayuscula o minuscula. Si los nombres son diferentes
 igualmente funciona porque asigna por posicion.
 
-Consideraciones tecnicas
+## Consideraciones tecnicas 
 
-El codigo no necesita instalar nada. Solamente Python 3.6 o superior
-que ya viene con todas las librerias necesarias.
+El codigo precisa contar con Python 3.6 o superior 
+que ya viene con todas las librerias necesarias, y la librería **matplotlib**. 
 
-Los graficos se generan en texto plano porque no se utilizan librerias
-como matplotlib. El grafico usa caracteres para dibujar barras:
-- █ representa temperaturas positivas
-- ▒ representa temperaturas negativas
-- | marca la linea de cero grados
+Los graficos se generan con la librería con matplotlib.
 
 El manejo de errores esta contemplado. Si el archivo no existe o tiene
 un formato incorrecto el programa muestra un mensaje y termina sin romperse.
