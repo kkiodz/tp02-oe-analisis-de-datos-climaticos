@@ -18,20 +18,16 @@ RESULTADOS_DIR = os.path.join(BASE_DIR, 'resultados')
 os.makedirs(RESULTADOS_DIR, exist_ok=True)
 
 print("\n" + "="*60)
-print("ANALISIS DE TEMPERATURA GLOBAL (CSV")
+print("ANALISIS DE TEMPERATURA GLOBAL (CSV)")
 print("="*60 + "\n")
 
 # Verificar que el archivo existe
 
 if not os.path.exists(DATOS_PATH):
     print(f"ERROR: No se encuentra el archivo: {DATOS_PATH}")
-    print(f"Nota: Asegurate de tener el archivo 'temperaturasanuales.csv' en la carpeta /datos")
     print(f"Nota: El archivo debe tener el formato: Source,Year,Mean")
     exit()
 
-# Paso 1: cargar datos del csv manualmente
-
-print("Cargando archivo CSV...")
 datos = []
 fuente = ""
 
@@ -45,7 +41,6 @@ try:
         exit()
     
     encabezado = lineas[0].strip().split(',')
-    print(f"Encabezado encontrado: {encabezado}")
     
 
     idx_source = -1
@@ -89,7 +84,6 @@ try:
                 print(f"Advertencia: Error al procesar linea: {linea} - {e}")
                 continue
     
-    print(f"Datos cargados correctamente desde: {DATOS_PATH}")
     print(f"Registros encontrados: {len(datos)} años")
     if datos:
         print(f"Fuente de datos: {fuente}")
@@ -105,11 +99,6 @@ except Exception as e:
 if not datos:
     print("ERROR: No se pudieron cargar los datos. Verifica el archivo.")
     exit()
-
-# Paso 2: calcular indicadores climaticos
-print("\n" + "="*50)
-print("CALCULO DE INDICADORES CLIMATICOS")
-print("="*50)
 
 # inicializar acumuladores
 suma_anomalias = 0.0
@@ -148,7 +137,8 @@ if años_totales > 0:
 else:
     calentamiento_por_decada = 0
 
-# Paso 3: calcular media movil de 5 años
+
+# Calculo de media movil de 5 años
 ventana = 5
 media_movil_5 = []
 for i in range(len(datos)):
@@ -160,14 +150,6 @@ for i in range(len(datos)):
             suma += datos[j]['anomalia']
         media = suma / ventana
         media_movil_5.append((datos[i]['año'], media))
-
-# Muestro resultados en pantalla
-print(f"\nRESULTADOS (Anomalias de temperatura vs linea base):")
-print(f"   • Anomalia promedio: {anomalia_promedio:.4f}°C")
-print(f"   • Anomalia maxima: {anomalia_max:.4f}°C (año {año_max})")
-print(f"   • Anomalia minima: {anomalia_min:.4f}°C (año {año_min})")
-print(f"   • Tendencia general: {tendencia_total:+.4f}°C")
-print(f"   • Calentamiento por decada: {calentamiento_por_decada:+.4f}°C/decada")
 
 # Almaceno resultados en un diccionario
 resultados = {
@@ -186,11 +168,6 @@ resultados = {
     'fecha_analisis': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
 
-# Paso 4: generar grafico ascii en consola
-print("\n" + "="*50)
-print("GRAFICO DE EVOLUCION (Vista simplificada)")
-print("="*50)
-
 # tomar una muestra para no saturar (maximo 40 años)
 paso = max(1, len(datos) // 40)
 muestra = datos[::paso]
@@ -204,9 +181,6 @@ if rango == 0:
 escala = 50
 linea_cero = int((0 - min_anomalia) / rango * escala)
 
-print(f"\nEscala: {min_anomalia:.2f}°C (izquierda) a {max_anomalia:.2f}°C (derecha)")
-print(f"(Cada '=' representa aproximadamente {rango/escala:.2f}°C)")
-print("-"*80)
 
 for reg in muestra:
     año = reg['año']
@@ -225,9 +199,6 @@ for reg in muestra:
     elif año == resultados['año_anomalia_minima']:
         marcador = " <- MINIMO"
     
-    print(f"{año:4d} | {barra} {anomalia:6.3f}°C{marcador}")
-
-print("-"*80)
 
 # SE COMENTA GRAFICO EN ASCII YA QUE TENGO EL MATPLOTLIB DISPONIBLE, PERO SE DEJA EL CODIGO COMO REFERENCIA PARA FUTURAS VERSIONES SIN DEPENDENCIAS EXTERNAS
 # output_grafico = os.path.join(RESULTADOS_DIR, 'grafico_evolucion.txt')
@@ -257,7 +228,7 @@ print("-"*80)
 
 # print(f"Grafico guardado en: {output_grafico}")
 
-# paso 6: guardar resultados numericos en archivo de texto
+# Resultados numericos en archivo de texto
 output_resultados = os.path.join(RESULTADOS_DIR, 'resultados_analisis.txt')
 with open(output_resultados, 'w', encoding='utf-8') as f:
     f.write("="*70 + "\n")
@@ -303,10 +274,8 @@ with open(output_resultados, 'w', encoding='utf-8') as f:
 
 print(f"Resultados guardados en: {output_resultados}")
 
-# paso 7: guardar top 10 años mas calidos y mas frios
 output_top = os.path.join(RESULTADOS_DIR, 'top_anios_temperatura.txt')
 
-# copiar listas para ordenar
 datos_calidos = datos.copy()
 datos_frios = datos.copy()
 
@@ -338,9 +307,8 @@ with open(output_top, 'w', encoding='utf-8') as f:
     for reg in top_frios:
         f.write(f"   Año {reg['año']:4d}: {reg['anomalia']:.4f}°C\n")
 
-print(f"Top años guardado en: {output_top}")
 
-# paso 8: guardar datos procesados año por año (csv)
+# Guardar datos procesados año por año en el archivo .csv
 output_csv = os.path.join(RESULTADOS_DIR, 'datos_procesados.csv')
 with open(output_csv, 'w', encoding='utf-8') as f:
     f.write("Año,Anomalia_C,Media_Movil_5a\n")
@@ -357,7 +325,6 @@ with open(output_csv, 'w', encoding='utf-8') as f:
         
         f.write(f"{año},{anomalia:.4f},{media_movil}\n")
 
-print(f"Datos procesados guardados en: {output_csv}")
 
 if TIENE_PLT and len(datos) > 10:
     plt.figure(figsize=(10,5))
@@ -367,11 +334,5 @@ if TIENE_PLT and len(datos) > 10:
 
 # finalizar
 print("\n" + "="*60)
-print("ANALISIS COMPLETADO CON EXITO")
 print(f"Resultados guardados en: {RESULTADOS_DIR}")
-print("\nArchivos generados:")
-print("   • resultados_analisis.txt - Indicadores principales")
-print("   • top_anios_temperatura.txt - Años mas calidos/frios")
-print("   • grafico_evolucion.txt - Grafico de evolucion")
-print("   • datos_procesados.csv - Datos año por año (CSV)")
 print("="*60)
