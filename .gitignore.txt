@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+.ipynb_checkpoints/
+*.ipynb
+colab_helper.py
+
+# Archivos temporales
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+.env
+token.txt
+*secret*
+*key*
+
+# Editor configs
+.vscode/
+.idea/
+*.swp
